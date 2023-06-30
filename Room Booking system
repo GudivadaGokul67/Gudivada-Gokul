@@ -1,0 +1,97 @@
+#include <iostream>
+#include <vector>
+
+class Room {
+private:
+    std::string roomNumber;
+    std::string host;
+    std::string startTime;
+    std::string endTime;
+    std::vector<bool> chairBooking;
+
+public:
+    Room(const std::string& roomNumber) : roomNumber(roomNumber) {
+        // Assuming there are 32 chairs in each room
+        chairBooking.resize(32, false);
+    }
+
+    void setHost(const std::string& hostName) {
+        host = hostName;
+    }
+
+    void setStartTime(const std::string& start) {
+        startTime = start;
+    }
+
+    void setEndTime(const std::string& end) {
+        endTime = end;
+    }
+
+    bool bookChair(int chairNumber) {
+        if (chairNumber >= 1 && chairNumber <= 32) {
+            if (chairBooking[chairNumber - 1]) {
+                std::cout << "Chair " << chairNumber << " is already booked.\n";
+                return false;
+            } else {
+                chairBooking[chairNumber - 1] = true;
+                std::cout << "Chair " << chairNumber << " booked successfully.\n";
+                return true;
+            }
+        } else {
+            std::cout << "Invalid chair number.\n";
+            return false;
+        }
+    }
+
+    void displayStatus() const {
+        std::cout << "Room Number: " << roomNumber << "\n";
+        std::cout << "Host: " << host << "\n";
+        std::cout << "Start Time: " << startTime << "\n";
+        std::cout << "End Time: " << endTime << "\n";
+        std::cout << "Chair Booking Status:\n";
+        for (int i = 0; i < chairBooking.size(); ++i) {
+            std::cout << "Chair " << (i + 1) << ": " << (chairBooking[i] ? "Booked" : "Available") << "\n";
+        }
+    }
+};
+
+int main() {
+    std::string roomNumber, host, startTime, endTime;
+    int chairNumber;
+    char continueBooking;
+
+    // Create a room
+    std::cout << "Enter the room number: ";
+    std::cin >> roomNumber;
+    Room room(roomNumber);
+
+    // Set host
+    std::cout << "Enter the host name: ";
+    std::cin >> host;
+    room.setHost(host);
+
+    // Set start time
+    std::cout << "Enter the start time: ";
+    std::cin >> startTime;
+    room.setStartTime(startTime);
+
+    // Set end time
+    std::cout << "Enter the end time: ";
+    std::cin >> endTime;
+    room.setEndTime(endTime);
+
+    do {
+        // Book a chair
+        std::cout << "Enter the chair number to book: ";
+        std::cin >> chairNumber;
+        room.bookChair(chairNumber);
+
+        std::cout << "Do you want to book another chair? (y/n): ";
+        std::cin >> continueBooking;
+    } while (continueBooking == 'y' || continueBooking == 'Y');
+
+    // Display room status
+    room.displayStatus();
+
+    return 0;
+}
