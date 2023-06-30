@@ -1,1 +1,42 @@
+import numpy as np
+import sklearn.datasets
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
+# Load the breast cancer dataset
+breast_cancer = sklearn.datasets.load_breast_cancer()
+x = breast_cancer.data
+y = breast_cancer.target
+
+# Create a DataFrame from the data
+data = pd.DataFrame(breast_cancer.data, columns=breast_cancer.feature_names)
+data['class'] = y
+
+# Split the data into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.05, stratify=y, random_state=1)
+
+# Create and train the logistic regression classifier
+classifier = LogisticRegression()
+classifier.fit(x_train, y_train)
+
+# Make predictions on the training and testing sets
+prediction_on_training_data = classifier.predict(x_train)
+accuracy = accuracy_score(y_train, prediction_on_training_data)
+print('Accuracy on training data:', accuracy)
+
+prediction_on_testing_data = classifier.predict(x_test)
+accuracy2 = accuracy_score(y_test, prediction_on_testing_data)
+print('Accuracy on testing data:', accuracy2)
+
+# Now, let's input new data to make predictions
+input_data = input("Enter the values for the features separated by spaces: ").split()
+input_data = np.asarray(input_data, dtype=np.float64)
+resized_data = input_data.reshape(1, -1)
+test_result = classifier.predict(resized_data)
+
+if test_result[0] == 0:
+    print('Type of the cancer is malignant')
+elif test_result[0] == 1:
+    print('Type of the cancer is benign')
